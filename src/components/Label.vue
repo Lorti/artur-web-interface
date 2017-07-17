@@ -1,8 +1,9 @@
 <template>
     <div>
+        <img id="source" src="../assets/test.png" style="display: none;">
         <canvas width="256" height="256" v-update-texture="label"></canvas>
-        <label for="input">Aufschrift</label>
-        <input id="input" v-model="label">
+        <label for="labelInput">Aufschrift</label>
+        <input id="labelInput" v-model="label">
     </div>
 </template>
 
@@ -18,6 +19,10 @@
       updateTexture(element, binding) {
         const ctx = element.getContext('2d');
         ctx.clearRect(0, 0, element.width, element.height);
+        const source = document.getElementById('source');
+        if (source && source.complete) {
+          ctx.drawImage(source, 0, 0, element.width, element.height);
+        }
         ctx.fillStyle = 'black';
         ctx.font = '24px Helvetica';
         ctx.textAlign = 'center';
