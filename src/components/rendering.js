@@ -34,13 +34,13 @@ function setup(element) {
   renderer.setSize(element.offsetWidth, element.offsetHeight);
   element.appendChild(renderer.domElement);
 
+  let canvasTexture;
   const object = new THREE.Object3D();
   loadAsset('test').then((test) => {
     test.traverse((node) => {
-      node.castShadow = true; // eslint-disable-line no-param-reassign
       if (node.material) {
         // TODO
-        const canvasTexture = new THREE.CanvasTexture(document.querySelector('.compound'));
+        canvasTexture = new THREE.CanvasTexture(document.querySelector('.compound'));
         node.material.map = canvasTexture; // eslint-disable-line no-param-reassign
       }
     });
@@ -57,7 +57,13 @@ function setup(element) {
     renderer.render(scene, camera);
   };
 
-  return animate;
+  animate();
+
+  const changeTexture = () => {
+    canvasTexture.needsUpdate = true;
+  };
+
+  return changeTexture;
 }
 
 export default setup;

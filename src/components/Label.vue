@@ -17,13 +17,13 @@
     name: 'label',
     data() {
       return {
+        updateTexture: null,
         texture: null,
         label: 'A.R.T.U.R.',
       };
     },
     mounted() {
-      const animate = setup(this.$refs.scene);
-      animate();
+      this.updateTexture = setup(this.$refs.scene);
     },
     methods: {
       textureLoaded() {
@@ -42,6 +42,11 @@
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(binding.value.label, element.width / 2, element.height / 2);
+      },
+    },
+    watch: {
+      label() {
+        this.updateTexture();
       },
     },
   };
