@@ -22,18 +22,29 @@ function setup(element) {
     75, element.offsetWidth / element.offsetHeight, 1, 1000);
   camera.position.z = 100;
 
-  const axisHelper = new THREE.AxisHelper(10);
-  scene.add(axisHelper);
-
-  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
   ambientLight.color.setHSL(0.1, 1, 0.95);
   scene.add(ambientLight);
+
+  const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.5);
+  hemisphereLight.color.setHSL(0.6, 1, 0.95);
+  hemisphereLight.groundColor.setHSL(0.095, 1, 0.75);
+  hemisphereLight.position.set(0, 0, 500);
+  scene.add(hemisphereLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.65);
+  directionalLight.color.setHSL(0.1, 1, 0.95);
+  directionalLight.position.set(-1, 1, 1);
+  directionalLight.position.multiplyScalar(50);
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(element.offsetWidth, element.offsetHeight);
   element.appendChild(renderer.domElement);
 
+  /* eslint-disable no-param-reassign */
   let canvasTexture;
   const object = new THREE.Object3D();
   loadAsset('test').then((test) => {
@@ -41,18 +52,20 @@ function setup(element) {
       if (node.material) {
         // TODO
         canvasTexture = new THREE.CanvasTexture(document.querySelector('.compound'));
-        node.material.map = canvasTexture; // eslint-disable-line no-param-reassign
+        canvasTexture.anisotropy = renderer.getMaxAnisotropy();
+        node.material.map = canvasTexture;
       }
     });
     test.scale.multiplyScalar(1);
     object.add(test);
   });
   scene.add(object);
+  /* eslint-enable no-param-reassign */
 
   // TODO
   const animate = () => {
     requestAnimationFrame(animate);
-    object.rotation.x += 0.005;
+//    object.rotation.x += 0.005;
     object.rotation.y += 0.01;
     renderer.render(scene, camera);
   };
