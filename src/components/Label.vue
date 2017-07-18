@@ -1,13 +1,18 @@
 <template>
   <div>
-    <img id="source" src="/static/test.png" ref="texture" @load="textureLoaded">
-    <canvas width="256" height="256" v-update-texture="{ texture, label }"></canvas>
-    <label for="labelInput">Aufschrift</label>
-    <input id="labelInput" v-model="label">
+    <img class="texture" ref="texture" src="static/test.png" @load="textureLoaded">
+    <canvas class="compound" width="256" height="256" v-update-texture="{ texture, label }"></canvas>
+    <label>
+      Aufschrift
+      <input v-model="label">
+    </label>
+    <div class="scene" ref="scene"></div>
   </div>
 </template>
 
 <script>
+  import setup from './rendering';
+
   export default {
     name: 'label',
     data() {
@@ -15,6 +20,10 @@
         texture: null,
         label: 'A.R.T.U.R.',
       };
+    },
+    mounted() {
+      const animate = setup(this.$refs.scene);
+      animate();
     },
     methods: {
       textureLoaded() {
@@ -40,9 +49,17 @@
 
 <style scoped>
   canvas {
+    display: block;
+    margin: 1em auto;
     border: 1px solid gray;
   }
-  #source {
+  .texture {
     display: none;
+  }
+  .scene {
+    display: block;
+    margin: 1em auto;
+    width: 320px;
+    height: 320px;
   }
 </style>
