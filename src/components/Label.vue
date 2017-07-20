@@ -2,11 +2,10 @@
   <div>
     <img class="texture" ref="texture" src="static/test.png" @load="textureLoaded">
     <canvas class="compound" width="256" height="256" v-update-texture="{ texture, label }"></canvas>
-    <label>
-      Aufschrift
-      <input v-model="label">
-    </label>
     <div class="scene" ref="scene"></div>
+    <label for="label">Aufschrift</label>
+    <br>
+    <input id="label" v-model="label">
   </div>
 </template>
 
@@ -19,7 +18,7 @@
       return {
         updateTexture: null,
         texture: null,
-        label: 'A.R.T.U.R.',
+        label: 'Ars Electronica Festival 2017',
       };
     },
     mounted() {
@@ -58,7 +57,8 @@
     margin: 1em auto;
     border: 1px solid gray;
   }
-  .texture {
+  .texture,
+  .compound {
     display: none;
   }
   .scene {

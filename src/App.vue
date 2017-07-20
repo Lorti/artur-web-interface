@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img id="logo" src="./assets/logo.png">
+    <h1><img id="logo" src="./assets/logo.png"> A.R.T.U.R.</h1>
     <router-view></router-view>
   </div>
 </template>
@@ -18,10 +18,10 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
   }
   #logo {
-    width: 128px;
-    height: auto;
+    width: auto;
+    height: 1em;
+    vertical-align: -0.125em;
   }
 </style>
