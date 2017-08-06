@@ -5,12 +5,12 @@ import '../vendor/OBJLoader';
 function loadAsset(name) {
   return new Promise((resolve, reject) => {
     const mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setPath('static/');
+    mtlLoader.setPath(`static/${name}/`);
     mtlLoader.load(`${name}.mtl`, (materials) => {
       materials.preload();
       const objLoader = new THREE.OBJLoader();
       objLoader.setMaterials(materials);
-      objLoader.setPath('static/');
+      objLoader.setPath(`static/${name}/`);
       objLoader.load(`${name}.obj`, object => resolve(object), undefined, xhr => reject(xhr));
     }, undefined, xhr => reject(xhr));
   });
@@ -47,7 +47,7 @@ function setup(element) {
   /* eslint-disable no-param-reassign */
   let canvasTexture;
   const object = new THREE.Object3D();
-  loadAsset('test').then((test) => {
+  loadAsset('toaster').then((test) => {
     test.traverse((node) => {
       if (node.material) {
         // TODO
@@ -56,7 +56,8 @@ function setup(element) {
         node.material.map = canvasTexture;
       }
     });
-    test.scale.multiplyScalar(1);
+//    test.rotation.x = Math.PI / 2;
+    test.scale.multiplyScalar(250);
     object.add(test);
   });
   scene.add(object);

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img class="texture" ref="texture" src="static/test.png" @load="textureLoaded">
+    <img class="texture" ref="texture" src="static/toaster/toaster.png" @load="textureLoaded">
     <canvas class="compound" width="256" height="256" v-update-texture="{ texture, label }"></canvas>
     <div class="scene" ref="scene"></div>
     <label for="label">Aufschrift</label>
