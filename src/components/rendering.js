@@ -39,7 +39,7 @@ function setup(element) {
   directionalLight.castShadow = true;
   scene.add(directionalLight);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(element.offsetWidth, element.offsetHeight);
   element.appendChild(renderer.domElement);

@@ -11,6 +11,7 @@
 
 <script>
   import setup from './rendering';
+  import names from '../vendor/names.json';
 
   export default {
     name: 'label',
@@ -18,7 +19,7 @@
       return {
         updateTexture: null,
         texture: null,
-        label: 'Ars Electronica Festival 2017',
+        label: Object.keys(names)[Math.floor(Math.random() * Object.keys(names).length)],
       };
     },
     mounted() {
