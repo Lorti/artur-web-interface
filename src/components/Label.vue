@@ -1,7 +1,8 @@
 <template>
   <v-touch ref="swiper" @swipeleft="swipedLeft" @swiperight="swipedRight">
-    <img class="originalTexture" ref="texture" src="static/toaster/toaster.png" @load="textureLoaded">
-    <canvas class="compoundTexture" width="256" height="256" v-update-texture="{ texture, label }"></canvas>
+    <img class="originalTexture" ref="originalTexture" :src="asset.texture.src" @load="textureLoaded">
+    <canvas class="compoundTexture" ref="compoundTexture"
+            :width="asset.texture.width" :height="asset.texture.height" v-update-texture="{ texture, label }"></canvas>
     <div class="scene" ref="scene"></div>
     <label for="label">Aufschrift</label>
     <input id="label" v-model="label">
@@ -12,17 +13,29 @@
   import setup from './rendering';
   import names from '../vendor/names.json';
 
+  function getRandomLabel() {
+    return Object.keys(names)[Math.floor(Math.random() * Object.keys(names).length)];
+  }
+
   export default {
     name: 'label',
     data() {
       return {
-        updateTexture: null,
+        renderer: null,
         texture: null,
-        label: Object.keys(names)[Math.floor(Math.random() * Object.keys(names).length)],
+        asset: {
+          texture: {
+            width: 256,
+            height: 256,
+            src: 'static/toaster/toaster.png',
+          },
+        },
+        label: getRandomLabel(),
       };
     },
     mounted() {
-      this.updateTexture = setup(this.$refs.scene);
+      this.renderer = setup(this.$refs.scene, this.$refs.compoundTexture);
+      console.log(this.renderer);
     },
     methods: {
       swipedLeft() {
@@ -32,7 +45,7 @@
         console.log('swiped right');
       },
       textureLoaded() {
-        this.texture = this.$refs.texture;
+        this.texture = this.$refs.originalTexture;
       },
     },
     directives: {
@@ -51,7 +64,7 @@
     },
     watch: {
       label() {
-        this.updateTexture();
+        this.renderer.changeTexture();
       },
     },
   };
@@ -62,6 +75,7 @@
   .compoundTexture {
     display: none;
   }
+
   .scene {
     display: block;
     margin: 1em auto;

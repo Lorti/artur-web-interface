@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 import * as THREE from 'three';
 import '../vendor/MTLLoader';
 import '../vendor/OBJLoader';
@@ -16,7 +18,7 @@ function loadAsset(name) {
   });
 }
 
-function setup(element) {
+function setup(element, textureCanvas) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
     75, element.offsetWidth / element.offsetHeight, 1, 1000);
@@ -44,14 +46,13 @@ function setup(element) {
   renderer.setSize(element.offsetWidth, element.offsetHeight);
   element.appendChild(renderer.domElement);
 
-  /* eslint-disable no-param-reassign */
   let canvasTexture;
   const object = new THREE.Object3D();
   loadAsset('toaster').then((test) => {
     test.traverse((node) => {
       if (node.material) {
         // TODO
-        canvasTexture = new THREE.CanvasTexture(document.querySelector('.compoundTexture'));
+        canvasTexture = new THREE.CanvasTexture(textureCanvas);
         canvasTexture.anisotropy = renderer.getMaxAnisotropy();
         node.material.map = canvasTexture;
       }
@@ -61,7 +62,6 @@ function setup(element) {
     object.add(test);
   });
   scene.add(object);
-  /* eslint-enable no-param-reassign */
 
   // TODO
   const animate = () => {
@@ -77,7 +77,9 @@ function setup(element) {
     canvasTexture.needsUpdate = true;
   };
 
-  return changeTexture;
+  return {
+    changeTexture,
+  };
 }
 
 export default setup;
