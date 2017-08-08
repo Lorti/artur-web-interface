@@ -1,12 +1,11 @@
 <template>
-  <div>
-    <img class="texture" ref="texture" src="static/toaster/toaster.png" @load="textureLoaded">
-    <canvas class="compound" width="256" height="256" v-update-texture="{ texture, label }"></canvas>
+  <v-touch ref="swiper" @swipeleft="swipedLeft" @swiperight="swipedRight">
+    <img class="originalTexture" ref="texture" src="static/toaster/toaster.png" @load="textureLoaded">
+    <canvas class="compoundTexture" width="256" height="256" v-update-texture="{ texture, label }"></canvas>
     <div class="scene" ref="scene"></div>
     <label for="label">Aufschrift</label>
-    <br>
     <input id="label" v-model="label">
-  </div>
+  </v-touch>
 </template>
 
 <script>
@@ -26,6 +25,12 @@
       this.updateTexture = setup(this.$refs.scene);
     },
     methods: {
+      swipedLeft() {
+        console.log('swiped left');
+      },
+      swipedRight() {
+        console.log('swiped right');
+      },
       textureLoaded() {
         this.texture = this.$refs.texture;
       },
@@ -53,13 +58,8 @@
 </script>
 
 <style scoped>
-  canvas {
-    display: block;
-    margin: 1em auto;
-    border: 1px solid gray;
-  }
-  .texture,
-  .compound {
+  .originalTexture,
+  .compoundTexture {
     display: none;
   }
   .scene {

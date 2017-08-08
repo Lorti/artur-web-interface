@@ -51,7 +51,7 @@ function setup(element) {
     test.traverse((node) => {
       if (node.material) {
         // TODO
-        canvasTexture = new THREE.CanvasTexture(document.querySelector('.compound'));
+        canvasTexture = new THREE.CanvasTexture(document.querySelector('.compoundTexture'));
         canvasTexture.anisotropy = renderer.getMaxAnisotropy();
         node.material.map = canvasTexture;
       }
