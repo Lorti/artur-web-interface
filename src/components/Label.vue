@@ -35,14 +35,13 @@
     },
     mounted() {
       this.renderer = setup(this.$refs.scene, this.$refs.compoundTexture);
-      console.log(this.renderer);
     },
     methods: {
       swipedLeft() {
-        console.log('swiped left');
+        this.renderer.previousAsset();
       },
       swipedRight() {
-        console.log('swiped right');
+        this.renderer.nextAsset();
       },
       textureLoaded() {
         this.texture = this.$refs.originalTexture;

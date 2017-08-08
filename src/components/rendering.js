@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 import * as THREE from 'three';
+import TWEEN from '@tweenjs/tween.js';
 import '../vendor/MTLLoader';
 import '../vendor/OBJLoader';
 
@@ -22,7 +23,6 @@ function setup(element, textureCanvas) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
     75, element.offsetWidth / element.offsetHeight, 1, 1000);
-  camera.position.z = 100;
 
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
   ambientLight.color.setHSL(0.1, 1, 0.95);
@@ -46,28 +46,35 @@ function setup(element, textureCanvas) {
   renderer.setSize(element.offsetWidth, element.offsetHeight);
   element.appendChild(renderer.domElement);
 
-  let canvasTexture;
-  const object = new THREE.Object3D();
-  loadAsset('toaster').then((test) => {
-    test.traverse((node) => {
-      if (node.material) {
-        // TODO
-        canvasTexture = new THREE.CanvasTexture(textureCanvas);
-        canvasTexture.anisotropy = renderer.getMaxAnisotropy();
-        node.material.map = canvasTexture;
-      }
-    });
-//    test.rotation.x = Math.PI / 2;
-    test.scale.multiplyScalar(250);
-    object.add(test);
-  });
-  scene.add(object);
+  const canvasTexture = new THREE.CanvasTexture(textureCanvas);
+  canvasTexture.anisotropy = renderer.getMaxAnisotropy();
 
-  // TODO
+  const objects = [];
+
+  for (let i = 0; i < Math.PI * 2; i += Math.PI / 4) {
+    const object = new THREE.Object3D();
+
+    loadAsset('toaster').then((test) => {
+      test.traverse((node) => {
+        if (node.material) {
+          node.material.map = canvasTexture;
+        }
+      });
+      test.scale.multiplyScalar(250);
+      object.add(test);
+    });
+
+    object.position.x = 150 * Math.cos(i);
+    object.position.z = 150 * Math.sin(i);
+
+    scene.add(object);
+    objects.push(object);
+  }
+
   const animate = () => {
     requestAnimationFrame(animate);
-//    object.rotation.x += 0.005;
-    object.rotation.y += 0.01;
+    objects.forEach((object) => { object.rotation.y += 0.01; });
+    TWEEN.update();
     renderer.render(scene, camera);
   };
 
@@ -77,8 +84,30 @@ function setup(element, textureCanvas) {
     canvasTexture.needsUpdate = true;
   };
 
+  // TODO
+  const rotation = { y: 0 };
+  const tween = new TWEEN.Tween(rotation)
+      .easing(TWEEN.Easing.Quadratic.InOut)
+      .onUpdate(() => {
+        camera.rotation.y = rotation.y;
+      });
+
+  const previousAsset = () => {
+    tween.stop()
+      .to({ y: camera.rotation.y - (Math.PI / 4) }, 1000)
+      .start();
+  };
+
+  const nextAsset = () => {
+    tween.stop()
+      .to({ y: camera.rotation.y + (Math.PI / 4) }, 1000)
+      .start();
+  };
+
   return {
     changeTexture,
+    previousAsset,
+    nextAsset,
   };
 }
 
