@@ -57,15 +57,18 @@ function setup(element, assets, textureCanvas) {
 
   for (let i = start; i < end; i += step) {
     const object = new THREE.Object3D();
+    const first = index === 0;
 
-    loadAsset(assets[index]).then((test) => {
-      test.traverse((node) => {
-        if (node.material) {
-          node.material.map = canvasTexture;
-        }
-      });
-      test.scale.multiplyScalar(250);
-      object.add(test);
+    loadAsset(assets[index]).then((asset) => {
+      if (first) {
+        asset.traverse((node) => {
+          if (node.material) {
+            node.material.map = canvasTexture;
+          }
+        });
+      }
+      asset.scale.multiplyScalar(250);
+      object.add(asset);
     });
 
     object.position.x = 150 * Math.sin(i);
@@ -73,6 +76,7 @@ function setup(element, assets, textureCanvas) {
 
     scene.add(object);
     objects.push(object);
+
 
     index += 1;
   }

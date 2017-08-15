@@ -2,7 +2,7 @@
   <v-touch ref="swiper" @swipeleft="swipedLeft" @swiperight="swipedRight">
     <img class="originalTexture" ref="originalTexture" :src="assets[0].map" @load="textureLoaded">
     <canvas class="compoundTexture" ref="compoundTexture"
-            width="512" height="512" v-update-texture="{ texture, label }"></canvas>
+            :width="resolution" :height="resolution" v-update-texture="{ texture, label, resolution }"></canvas>
     <div class="scene" ref="scene"></div>
     <label for="label">Aufschrift</label>
     <input id="label" v-model="label">
@@ -37,6 +37,7 @@
       return {
         renderer: null,
         texture: null,
+        resolution: 2048,
         assets: getShuffledAssets(),
         label: getRandomLabel(),
       };
@@ -62,8 +63,10 @@
         if (binding.value.texture) {
           ctx.drawImage(binding.value.texture, 0, 0, element.width, element.height);
         }
-        ctx.fillStyle = 'black';
-        ctx.font = '36px Helvetica';
+        ctx.fillStyle = 'red';
+        ctx.fillRect(0, 0, element.width, element.height / 2);
+        ctx.fillStyle = 'white';
+        ctx.font = `${binding.value.resolution / 8}px Arial Black`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(binding.value.label, element.width / 2, element.height / 4);
