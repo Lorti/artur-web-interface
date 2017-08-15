@@ -2,10 +2,18 @@
   <v-touch ref="swiper" @swipeleft="swipedLeft" @swiperight="swipedRight">
     <img class="originalTexture" ref="originalTexture" :src="assets[0].map" @load="textureLoaded">
     <canvas class="compoundTexture" ref="compoundTexture"
-            :width="resolution" :height="resolution" v-update-texture="{ texture, label, resolution }"></canvas>
+            :width="resolution" :height="resolution"
+            v-update-texture="{ texture, label, color, resolution }"></canvas>
     <div class="scene" ref="scene"></div>
-    <label for="label">Aufschrift</label>
-    <input id="label" v-model="label">
+    <p>
+      <button class="colorButton colorButton--red" @click="makeRed"></button>
+      <button class="colorButton colorButton--yellow" @click="makeYellow"></button>
+      <button class="colorButton colorButton--green" @click="makeGreen"></button>
+      <button class="colorButton colorButton--blue" @click="makeBlue"></button>
+    </p>
+    <p>
+      <input id="label" v-model="label">
+    </p>
   </v-touch>
 </template>
 
@@ -31,6 +39,17 @@
     return Object.keys(nameList)[Math.floor(Math.random() * Object.keys(nameList).length)];
   }
 
+  const colors = {
+    red: '#E61717',
+    yellow: '#E6C217',
+    green: '#12B812',
+    blue: '#3E209E',
+  };
+
+  function getRandomColor() {
+    return Object.keys(colors)[Math.floor(Math.random() * Object.keys(colors).length)];
+  }
+
   export default {
     name: 'label',
     data() {
@@ -38,6 +57,7 @@
         renderer: null,
         texture: null,
         resolution: 2048,
+        color: getRandomColor(),
         assets: getShuffledAssets(),
         label: getRandomLabel(),
       };
@@ -46,6 +66,18 @@
       this.renderer = setup(this.$refs.scene, this.assets, this.$refs.compoundTexture);
     },
     methods: {
+      makeRed() {
+        this.color = colors.red;
+      },
+      makeYellow() {
+        this.color = colors.yellow;
+      },
+      makeGreen() {
+        this.color = colors.green;
+      },
+      makeBlue() {
+        this.color = colors.blue;
+      },
       swipedLeft() {
         this.renderer.previousAsset();
       },
@@ -63,7 +95,7 @@
         if (binding.value.texture) {
           ctx.drawImage(binding.value.texture, 0, 0, element.width, element.height);
         }
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = binding.value.color;
         ctx.fillRect(0, 0, element.width, element.height / 2);
         ctx.fillStyle = 'white';
         ctx.font = `${binding.value.resolution / 8}px Arial Black`;
@@ -74,6 +106,9 @@
     },
     watch: {
       label() {
+        this.renderer.changeTexture();
+      },
+      color() {
         this.renderer.changeTexture();
       },
     },
@@ -91,5 +126,23 @@
     margin: 1em auto;
     width: 320px;
     height: 320px;
+  }
+
+  .colorButton {
+    border: none;
+    width: 44px;
+    height: 44px;
+  }
+  .colorButton--red {
+    background-color: red;
+  }
+  .colorButton--yellow {
+    background-color: yellow;
+  }
+  .colorButton--green {
+    background-color: green;
+  }
+  .colorButton--blue {
+    background-color: blue;
   }
 </style>
