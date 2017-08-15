@@ -5,21 +5,20 @@ import TWEEN from '@tweenjs/tween.js';
 import '../vendor/MTLLoader';
 import '../vendor/OBJLoader';
 
-function loadAsset(name) {
+function loadAsset(asset) {
   return new Promise((resolve, reject) => {
     const mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setPath(`static/${name}/`);
-    mtlLoader.load(`${name}.mtl`, (materials) => {
+    mtlLoader.setTexturePath(`/static/${asset.name}/`);
+    mtlLoader.load(asset.mtl, (materials) => {
       materials.preload();
       const objLoader = new THREE.OBJLoader();
       objLoader.setMaterials(materials);
-      objLoader.setPath(`static/${name}/`);
-      objLoader.load(`${name}.obj`, object => resolve(object), undefined, xhr => reject(xhr));
+      objLoader.load(asset.obj, object => resolve(object), undefined, xhr => reject(xhr));
     }, undefined, xhr => reject(xhr));
   });
 }
 
-function setup(element, textureCanvas) {
+function setup(element, assets, textureCanvas) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
     75, element.offsetWidth / element.offsetHeight, 1, 1000);
@@ -50,11 +49,16 @@ function setup(element, textureCanvas) {
   canvasTexture.anisotropy = renderer.getMaxAnisotropy();
 
   const objects = [];
+  const offset = Math.PI;
+  const start = offset;
+  const end = (Math.PI * 2) + offset;
+  const step = (Math.PI * 2) / assets.length;
+  let index = 0;
 
-  for (let i = 0; i < Math.PI * 2; i += Math.PI / 4) {
+  for (let i = start; i < end; i += step) {
     const object = new THREE.Object3D();
 
-    loadAsset('toaster').then((test) => {
+    loadAsset(assets[index]).then((test) => {
       test.traverse((node) => {
         if (node.material) {
           node.material.map = canvasTexture;
@@ -64,11 +68,13 @@ function setup(element, textureCanvas) {
       object.add(test);
     });
 
-    object.position.x = 150 * Math.cos(i);
-    object.position.z = 150 * Math.sin(i);
+    object.position.x = 150 * Math.sin(i);
+    object.position.z = 150 * Math.cos(i);
 
     scene.add(object);
     objects.push(object);
+
+    index += 1;
   }
 
   const animate = () => {
@@ -94,13 +100,13 @@ function setup(element, textureCanvas) {
 
   const previousAsset = () => {
     tween.stop()
-      .to({ y: camera.rotation.y - (Math.PI / 4) }, 1000)
+      .to({ y: camera.rotation.y - step }, 1000)
       .start();
   };
 
   const nextAsset = () => {
     tween.stop()
-      .to({ y: camera.rotation.y + (Math.PI / 4) }, 1000)
+      .to({ y: camera.rotation.y + step }, 1000)
       .start();
   };
 

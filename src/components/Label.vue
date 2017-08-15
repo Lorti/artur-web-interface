@@ -1,8 +1,8 @@
 <template>
   <v-touch ref="swiper" @swipeleft="swipedLeft" @swiperight="swipedRight">
-    <img class="originalTexture" ref="originalTexture" :src="asset.texture.src" @load="textureLoaded">
+    <img class="originalTexture" ref="originalTexture" :src="assets[0].map" @load="textureLoaded">
     <canvas class="compoundTexture" ref="compoundTexture"
-            :width="asset.texture.width" :height="asset.texture.height" v-update-texture="{ texture, label }"></canvas>
+            width="512" height="512" v-update-texture="{ texture, label }"></canvas>
     <div class="scene" ref="scene"></div>
     <label for="label">Aufschrift</label>
     <input id="label" v-model="label">
@@ -10,11 +10,25 @@
 </template>
 
 <script>
+  import shuffle from 'array-shuffle';
+
   import setup from './rendering';
-  import names from '../vendor/names.json';
+
+  import assetList from '../../static/assets.json';
+  import nameList from '../vendor/names.json';
+
+  function getShuffledAssets() {
+    const shuffled = shuffle(assetList);
+    return shuffled.map(name => ({
+      name,
+      obj: `static/${name}/${name}.obj`,
+      mtl: `static/${name}/${name}.mtl`,
+      map: `static/${name}/${name}.png`,
+    }));
+  }
 
   function getRandomLabel() {
-    return Object.keys(names)[Math.floor(Math.random() * Object.keys(names).length)];
+    return Object.keys(nameList)[Math.floor(Math.random() * Object.keys(nameList).length)];
   }
 
   export default {
@@ -23,18 +37,12 @@
       return {
         renderer: null,
         texture: null,
-        asset: {
-          texture: {
-            width: 256,
-            height: 256,
-            src: 'static/toaster/toaster.png',
-          },
-        },
+        assets: getShuffledAssets(),
         label: getRandomLabel(),
       };
     },
     mounted() {
-      this.renderer = setup(this.$refs.scene, this.$refs.compoundTexture);
+      this.renderer = setup(this.$refs.scene, this.assets, this.$refs.compoundTexture);
     },
     methods: {
       swipedLeft() {

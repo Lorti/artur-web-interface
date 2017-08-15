@@ -10,10 +10,12 @@
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
-    "lint": "eslint --ext .js,.vue src test/unit/specs"
+    "lint": "eslint --ext .js,.vue src test/unit/specs",
+    "assets": "node build/list-assets.js"
   },
   "dependencies": {
     "@tweenjs/tween.js": "^17.1.0",
+    "array-shuffle": "^1.0.1",
     "normalize.css": "^7.0.0",
     "three": "^0.86.0",
     "vue": "^2.3.3",
