@@ -1,6 +1,6 @@
 <template>
   <v-touch ref="swiper" @swipeleft="swipedLeft" @swiperight="swipedRight">
-    <img class="originalTexture" ref="originalTexture" :src="assets[0].map" @load="textureLoaded">
+    <img class="originalTexture" ref="originalTexture" :src="assets[position].map" @load="textureLoaded">
     <canvas class="compoundTexture" ref="compoundTexture"
             :width="resolution" :height="resolution"
             v-update-texture="{ texture, label, color, resolution }"></canvas>
@@ -60,6 +60,7 @@
         color: getRandomColor(),
         assets: getShuffledAssets(),
         label: getRandomLabel(),
+        position: 0,
       };
     },
     mounted() {
@@ -79,9 +80,17 @@
         this.color = colors.blue;
       },
       swipedLeft() {
+        this.position -= 1;
+        if (this.position < 0) {
+          this.position = this.assets.length - 1;
+        }
         this.renderer.previousAsset();
       },
       swipedRight() {
+        this.position += 1;
+        if (this.position > this.assets.length - 1) {
+          this.position = 0;
+        }
         this.renderer.nextAsset();
       },
       textureLoaded() {
@@ -110,6 +119,10 @@
       },
       color() {
         this.renderer.changeTexture();
+      },
+      position(current, previous) {
+        // TODO
+        // this.renderer.swapTexture(current, previous);
       },
     },
   };
