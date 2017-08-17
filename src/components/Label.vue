@@ -121,8 +121,7 @@
         this.renderer.changeTexture();
       },
       position(current, previous) {
-        // TODO
-        // this.renderer.swapTexture(current, previous);
+        this.renderer.swapTexture(current, previous);
       },
     },
   };

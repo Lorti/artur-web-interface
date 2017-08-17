@@ -63,6 +63,7 @@ function setup(element, assets, textureCanvas) {
       if (first) {
         asset.traverse((node) => {
           if (node.material) {
+            node.material.unalteredTexture = node.material.map;
             node.material.map = canvasTexture;
           }
         });
@@ -94,6 +95,23 @@ function setup(element, assets, textureCanvas) {
     canvasTexture.needsUpdate = true;
   };
 
+  const swapTexture = (currentAssetIndex, previousAssetIndex) => {
+    const currentAsset = objects[currentAssetIndex];
+    const previousAsset = objects[previousAssetIndex];
+    previousAsset.traverse((node) => {
+      if (node.material) {
+        node.material.map = node.material.unalteredTexture;
+      }
+    });
+    currentAsset.traverse((node) => {
+      if (node.material) {
+        node.material.unalteredTexture = node.material.map;
+        node.material.map = canvasTexture;
+      }
+    });
+    changeTexture();
+  };
+
   // TODO
   const rotation = { y: 0 };
   const tween = new TWEEN.Tween(rotation)
@@ -118,6 +136,7 @@ function setup(element, assets, textureCanvas) {
     changeTexture,
     previousAsset,
     nextAsset,
+    swapTexture,
   };
 }
 
