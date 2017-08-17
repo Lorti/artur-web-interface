@@ -5,15 +5,22 @@
             :width="resolution" :height="resolution"
             v-update-texture="{ texture, label, color, resolution }"></canvas>
     <div class="scene" ref="scene"></div>
-    <p>
-      <button class="colorButton colorButton--red" @click="makeRed"></button>
-      <button class="colorButton colorButton--yellow" @click="makeYellow"></button>
-      <button class="colorButton colorButton--green" @click="makeGreen"></button>
-      <button class="colorButton colorButton--blue" @click="makeBlue"></button>
-    </p>
-    <p>
-      <input id="label" v-model="label">
-    </p>
+    <form action="/submit" ref="form">
+      <input type="hidden" name="asset" :value="assets[position].name">
+      <p>
+        <button class="colorButton colorButton--red" @click="makeRed"></button>
+        <button class="colorButton colorButton--yellow" @click="makeYellow"></button>
+        <button class="colorButton colorButton--green" @click="makeGreen"></button>
+        <button class="colorButton colorButton--blue" @click="makeBlue"></button>
+        <input type="hidden" name="color" :value="color">
+      </p>
+      <p>
+        <input type="text" name="label" v-model="label">
+      </p>
+      <p>
+        <button type="submit" @click="submit">Submit</button>
+      </p>
+    </form>
   </v-touch>
 </template>
 
@@ -67,6 +74,13 @@
       this.renderer = setup(this.$refs.scene, this.assets, this.$refs.compoundTexture);
     },
     methods: {
+      submit() {
+        const form = this.$refs.form;
+        const data = new FormData(form);
+        const request = new XMLHttpRequest();
+        request.open('POST', '/submit');
+        request.send(data);
+      },
       makeRed() {
         this.color = colors.red;
       },
