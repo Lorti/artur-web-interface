@@ -1,7 +1,107 @@
 [
-    "car-battery",
-    "crt-monitor",
-    "microwave-oven",
-    "tape-recorder",
-    "toaster"
+    {
+        "name": "car-battery",
+        "obj": "static/car-battery/car-battery.obj",
+        "mtl": "static/car-battery/car-battery.mtl",
+        "map": "static/car-battery/car-battery.png",
+        "settings": {
+            "transform": {
+                "position": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "scale": 300
+            }
+        }
+    },
+    {
+        "name": "crt-monitor",
+        "obj": "static/crt-monitor/crt-monitor.obj",
+        "mtl": "static/crt-monitor/crt-monitor.mtl",
+        "map": "static/crt-monitor/crt-monitor.png",
+        "settings": {
+            "transform": {
+                "position": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "scale": 175
+            }
+        }
+    },
+    {
+        "name": "microwave-oven",
+        "obj": "static/microwave-oven/microwave-oven.obj",
+        "mtl": "static/microwave-oven/microwave-oven.mtl",
+        "map": "static/microwave-oven/microwave-oven.png",
+        "settings": {
+            "transform": {
+                "position": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "scale": 250
+            }
+        }
+    },
+    {
+        "name": "tape-recorder",
+        "obj": "static/tape-recorder/tape-recorder.obj",
+        "mtl": "static/tape-recorder/tape-recorder.mtl",
+        "map": "static/tape-recorder/tape-recorder.png",
+        "settings": {
+            "transform": {
+                "position": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "rotation": {
+                    "x": 1,
+                    "y": 0,
+                    "z": 0
+                },
+                "scale": 300
+            }
+        }
+    },
+    {
+        "name": "toaster",
+        "obj": "static/toaster/toaster.obj",
+        "mtl": "static/toaster/toaster.mtl",
+        "map": "static/toaster/toaster.png",
+        "settings": {
+            "transform": {
+                "position": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "rotation": {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                "scale": 300
+            }
+        }
+    }
 ]

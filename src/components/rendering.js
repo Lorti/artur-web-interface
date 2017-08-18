@@ -58,18 +58,21 @@ function setup(element, assets, textureCanvas) {
   for (let i = start; i < end; i += step) {
     const object = new THREE.Object3D();
     const first = index === 0;
-
-    loadAsset(assets[index]).then((asset) => {
+    const asset = assets[index];
+    loadAsset(asset).then((assetObject3d) => {
       if (first) {
-        asset.traverse((node) => {
+        assetObject3d.traverse((node) => {
           if (node.material) {
             node.material.unalteredTexture = node.material.map;
             node.material.map = canvasTexture;
           }
         });
       }
-      asset.scale.multiplyScalar(250);
-      object.add(asset);
+      assetObject3d.rotation.x = asset.settings.transform.rotation.x;
+      assetObject3d.rotation.y = asset.settings.transform.rotation.y;
+      assetObject3d.rotation.z = asset.settings.transform.rotation.z;
+      assetObject3d.scale.multiplyScalar(asset.settings.transform.scale);
+      object.add(assetObject3d);
     });
 
     object.position.x = 150 * Math.sin(i);

@@ -33,13 +33,7 @@
   import nameList from '../vendor/names.json';
 
   function getShuffledAssets() {
-    const shuffled = shuffle(assetList);
-    return shuffled.map(name => ({
-      name,
-      obj: `static/${name}/${name}.obj`,
-      mtl: `static/${name}/${name}.mtl`,
-      map: `static/${name}/${name}.png`,
-    }));
+    return shuffle(assetList);
   }
 
   function getRandomLabel() {
