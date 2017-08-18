@@ -48,6 +48,7 @@ function setup(element, assets, textureCanvas) {
   const canvasTexture = new THREE.CanvasTexture(textureCanvas);
   canvasTexture.anisotropy = renderer.getMaxAnisotropy();
 
+  const wheel = new THREE.Object3D();
   const objects = [];
   const offset = Math.PI;
   const start = offset;
@@ -78,12 +79,14 @@ function setup(element, assets, textureCanvas) {
     object.position.x = 150 * Math.sin(i);
     object.position.z = 150 * Math.cos(i);
 
-    scene.add(object);
+    wheel.add(object);
     objects.push(object);
 
 
     index += 1;
   }
+
+  scene.add(wheel);
 
   const animate = () => {
     requestAnimationFrame(animate);
@@ -120,18 +123,18 @@ function setup(element, assets, textureCanvas) {
   const tween = new TWEEN.Tween(rotation)
       .easing(TWEEN.Easing.Quadratic.InOut)
       .onUpdate(() => {
-        camera.rotation.y = rotation.y;
+        wheel.rotation.y = rotation.y;
       });
 
   const previousAsset = () => {
     tween.stop()
-      .to({ y: camera.rotation.y - step }, 1000)
+      .to({ y: wheel.rotation.y + step }, 1000)
       .start();
   };
 
   const nextAsset = () => {
     tween.stop()
-      .to({ y: camera.rotation.y + step }, 1000)
+      .to({ y: wheel.rotation.y - step }, 1000)
       .start();
   };
 

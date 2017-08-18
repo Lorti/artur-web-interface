@@ -25,5 +25,4 @@ fs.writeFile(`${folder}assets.json`, text, 'utf8', (error) => {
   if (error) {
     return console.log(error);
   }
-  console.log(names);
 });
