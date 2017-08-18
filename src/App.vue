@@ -20,6 +20,9 @@ export default {
         radial-gradient(hsl(0, 0%, 100%), hsl(0, 0%, 90%))
         no-repeat;
   }
+  *, *:before, *:after {
+    box-sizing: border-box;
+  }
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;

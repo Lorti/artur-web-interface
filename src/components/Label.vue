@@ -1,26 +1,28 @@
 <template>
   <v-touch ref="swiper" @swipeleft="swipedLeft" @swiperight="swipedRight">
-    <img class="originalTexture" ref="originalTexture" :src="assets[position].map" @load="textureLoaded">
-    <canvas class="compoundTexture" ref="compoundTexture"
-            :width="resolution" :height="resolution"
-            v-update-texture="{ texture, label, color, resolution }"></canvas>
-    <div class="scene" ref="scene"></div>
-    <form action="/submit" ref="form">
-      <input type="hidden" name="asset" :value="assets[position].name">
-      <p>
-        <button class="colorButton colorButton--red" type="button" @click="makeRed"></button>
-        <button class="colorButton colorButton--yellow" type="button" @click="makeYellow"></button>
-        <button class="colorButton colorButton--green" type="button" @click="makeGreen"></button>
-        <button class="colorButton colorButton--blue" type="button" @click="makeBlue"></button>
-        <input type="hidden" name="color" :value="color">
-      </p>
-      <p>
-        <input type="text" name="label" v-model="label">
-      </p>
-      <p>
-        <button type="submit" @click="submit">Submit</button>
-      </p>
-    </form>
+    <div class="column">
+      <img class="originalTexture" ref="originalTexture" :src="assets[position].map" @load="textureLoaded">
+      <canvas class="compoundTexture" ref="compoundTexture"
+              :width="resolution" :height="resolution"
+              v-update-texture="{ texture, label, color, resolution }"></canvas>
+      <div class="scene" ref="scene"></div>
+      <form action="/submit" ref="form">
+        <input type="hidden" name="asset" :value="assets[position].name">
+        <p>
+          <button class="colorButton colorButton--red" type="button" @click="makeRed"></button>
+          <button class="colorButton colorButton--yellow" type="button" @click="makeYellow"></button>
+          <button class="colorButton colorButton--green" type="button" @click="makeGreen"></button>
+          <button class="colorButton colorButton--blue" type="button" @click="makeBlue"></button>
+          <input type="hidden" name="color" :value="color">
+        </p>
+        <p>
+          <input type="text" name="label" v-model="label">
+        </p>
+        <p>
+          <button type="submit" @click="submit">Submit</button>
+        </p>
+      </form>
+    </div>
   </v-touch>
 </template>
 
@@ -136,6 +138,11 @@
 </script>
 
 <style scoped>
+  .column {
+    margin: 0 auto;
+    max-width: 320px;
+  }
+
   .originalTexture,
   .compoundTexture {
     display: none;
@@ -144,13 +151,14 @@
   .scene {
     display: block;
     margin: 1em auto;
-    width: 320px;
-    height: 320px;
+    width: 100%;
+    height: 240px;
   }
 
   .colorButton {
+    float: left;
     border: none;
-    width: 44px;
+    width: 25%;
     height: 44px;
   }
   .colorButton--red {
@@ -164,5 +172,19 @@
   }
   .colorButton--blue {
     background-color: blue;
+  }
+
+  input,
+  [type="submit"] {
+    height: 44px;
+    width: 100%;
+  }
+
+  p {
+    overflow: hidden;
+  }
+
+  form {
+    padding: 0 1em;
   }
 </style>

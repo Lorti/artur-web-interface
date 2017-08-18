@@ -21,7 +21,7 @@ function loadAsset(asset) {
 function setup(element, assets, textureCanvas) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
-    75, element.offsetWidth / element.offsetHeight, 1, 1000);
+    50, element.offsetWidth / element.offsetHeight, 1, 1000);
 
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
   ambientLight.color.setHSL(0.1, 1, 0.95);
@@ -90,7 +90,7 @@ function setup(element, assets, textureCanvas) {
 
   const animate = () => {
     requestAnimationFrame(animate);
-    objects.forEach((object) => { object.rotation.y += 0.01; });
+    objects.forEach((object) => { object.rotation.y -= 0.0125; });
     TWEEN.update();
     renderer.render(scene, camera);
   };
@@ -128,13 +128,13 @@ function setup(element, assets, textureCanvas) {
 
   const previousAsset = () => {
     tween.stop()
-      .to({ y: wheel.rotation.y + step }, 1000)
+      .to({ y: wheel.rotation.y + step }, 750)
       .start();
   };
 
   const nextAsset = () => {
     tween.stop()
-      .to({ y: wheel.rotation.y - step }, 1000)
+      .to({ y: wheel.rotation.y - step }, 750)
       .start();
   };
 
