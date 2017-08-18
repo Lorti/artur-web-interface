@@ -8,10 +8,10 @@
     <form action="/submit" ref="form">
       <input type="hidden" name="asset" :value="assets[position].name">
       <p>
-        <button class="colorButton colorButton--red" @click="makeRed"></button>
-        <button class="colorButton colorButton--yellow" @click="makeYellow"></button>
-        <button class="colorButton colorButton--green" @click="makeGreen"></button>
-        <button class="colorButton colorButton--blue" @click="makeBlue"></button>
+        <button class="colorButton colorButton--red" type="button" @click="makeRed"></button>
+        <button class="colorButton colorButton--yellow" type="button" @click="makeYellow"></button>
+        <button class="colorButton colorButton--green" type="button" @click="makeGreen"></button>
+        <button class="colorButton colorButton--blue" type="button" @click="makeBlue"></button>
         <input type="hidden" name="color" :value="color">
       </p>
       <p>
