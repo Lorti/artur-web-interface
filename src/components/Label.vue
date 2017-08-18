@@ -6,7 +6,7 @@
               :width="resolution" :height="resolution"
               v-update-texture="{ texture, label, color, resolution }"></canvas>
       <div class="scene" ref="scene"></div>
-      <form action="/submit" ref="form">
+      <form ref="form">
         <input type="hidden" name="asset" :value="assets[position].name">
         <p>
           <button class="colorButton colorButton--red" type="button" @click="makeRed"></button>
@@ -70,9 +70,11 @@
       this.renderer = setup(this.$refs.scene, this.assets, this.$refs.compoundTexture);
     },
     methods: {
-      submit() {
+      submit(e) {
+        e.preventDefault();
         const form = this.$refs.form;
         const data = new FormData(form);
+        data.append('img', this.$refs.compoundTexture.toDataURL('image/jpeg', 0.65));
         const request = new XMLHttpRequest();
         request.open('POST', '/submit');
         request.send(data);
