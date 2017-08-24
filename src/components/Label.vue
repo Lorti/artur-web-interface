@@ -31,7 +31,7 @@
 
   import setup from './rendering';
 
-  import assetList from '../../static/assets.json';
+  import assetList from './assets';
   import nameList from '../vendor/names.json';
 
   function getShuffledAssets() {

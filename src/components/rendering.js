@@ -69,10 +69,10 @@ function setup(element, assets, textureCanvas) {
           }
         });
       }
-      assetObject3d.rotation.x = asset.settings.transform.rotation.x;
-      assetObject3d.rotation.y = asset.settings.transform.rotation.y;
-      assetObject3d.rotation.z = asset.settings.transform.rotation.z;
-      assetObject3d.scale.multiplyScalar(asset.settings.transform.scale);
+      assetObject3d.rotation.x = asset.transform.rotation.x;
+      assetObject3d.rotation.y = asset.transform.rotation.y;
+      assetObject3d.rotation.z = asset.transform.rotation.z;
+      assetObject3d.scale.multiplyScalar(asset.transform.scale);
       object.add(assetObject3d);
     });
 

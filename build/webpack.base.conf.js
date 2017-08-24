@@ -25,8 +25,18 @@ module.exports = {
       '@': resolve('src')
     }
   },
+  resolveLoader: {
+    modules: [
+      'node_modules',
+      __dirname
+    ]
+  },
   module: {
     rules: [
+      {
+        test: /static\/.*?\/settings\.json$/,
+        use: 'assets-loader'
+      },
       {
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
