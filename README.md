@@ -2,7 +2,7 @@
 
 > A.R.T.U.R. is a game designed for the Deep Space 8K at Ars Electronica Center. It will make its debut at the Ars Electronica Festival 2017 in Linz, Austria. The web interface allows visitors to take part in the game by spawning new items for the players.
 
-## Build Setup
+## Development
 
 ``` bash
 # install dependencies
@@ -23,8 +23,6 @@ npm run unit
 # run all tests
 npm test
 ```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 ## Assets
 
