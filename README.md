@@ -28,11 +28,13 @@ npm test
 
 ### Code
 
+© 2017 Manuel Wieser
+
 [MIT License](LICENSE)
 
 ### Assets
 
-© 2017 Quantum Reboot, Playful Interactive Environments, Manuel Wieser
+© 2017 Quantum Reboot and Playful Interactive Environments
 
 All rights to the assets are reserved. This includes all images and .obj/.mtl files. You are not allowed to remix, transform, or build upon the material, and may not distribute the modified material.
 
