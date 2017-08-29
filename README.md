@@ -23,14 +23,3 @@ npm run unit
 # run all tests
 npm test
 ```
-
-## Assets
-
-* Logo © 2017 Jeremiah Diephuis
-* Models © 2017 Patrick Krinninger
-
-All rights to the assets are reserved. This includes all images and .obj/.mtl files. You are not allowed to remix, transform, or build upon the material, and may not distribute the modified material.
-
-## Backlog
-
-* https://uinames.com/api/
