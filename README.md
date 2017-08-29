@@ -24,10 +24,15 @@ npm run unit
 npm test
 ```
 
-## Assets
+## License
 
-* Logo © 2017 Jeremiah Diephuis
-* Models © 2017 Patrick Krinninger
+### Code
+
+[MIT License](LICENSE)
+
+### Assets
+
+© 2017 Quantum Reboot, Playful Interactive Environments, Manuel Wieser
 
 All rights to the assets are reserved. This includes all images and .obj/.mtl files. You are not allowed to remix, transform, or build upon the material, and may not distribute the modified material.
 
