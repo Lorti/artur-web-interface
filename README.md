@@ -1,6 +1,6 @@
-# A.R.T.U.R. Web Interface
+# _ARTUR: Autonomous Robot Playspace_ Web Interface
 
-> A.R.T.U.R. is a game designed for the Deep Space 8K at Ars Electronica Center. It will make its debut at the Ars Electronica Festival 2017 in Linz, Austria. The web interface allows visitors to take part in the game by spawning new items for the players.
+> _ARTUR: Autonomous Robot Playspace_ is a game designed for the Deep Space 8K at Ars Electronica Center. It will make its debut at the Ars Electronica Festival 2017 in Linz, Austria. The web interface allows visitors to take part in the game by spawning new items for the players.
 
 ## Development
 
@@ -24,22 +24,16 @@ npm run unit
 npm test
 ```
 
-## License
+## Licensing
 
 ### Code
 
-© 2017 Manuel Wieser
+© 2017 [Manuel Wieser](https://manu.ninja/)
 
 [MIT License](LICENSE)
 
 ### Assets
 
-© 2017 Quantum Reboot and Playful Interactive Environments
+© 2017 [Quantum Reboot](https://quantumreboot.com/) and [Playful Interactive Environments](http://pie.fh-hagenberg.at/)
 
 All rights to the assets are reserved. This includes all images and .obj/.mtl files. You are not allowed to remix, transform, or build upon the material, and may not distribute the modified material.
-
-## Backlog
-
-* SVG
-* Copyright
-* https://uinames.com/api/
