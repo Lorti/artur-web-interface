@@ -33,4 +33,6 @@ All rights to the assets are reserved. This includes all images and .obj/.mtl fi
 
 ## Backlog
 
+* SVG
+* Copyright
 * https://uinames.com/api/
