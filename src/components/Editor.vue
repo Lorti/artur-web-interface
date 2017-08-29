@@ -1,45 +1,47 @@
 <template>
   <v-touch ref="swiper" @swipeleft="swipedLeft" @swiperight="swipedRight">
-    <div class="column">
-      <img class="originalTexture" ref="originalTexture" :src="assets[position].map" @load="textureLoaded">
-      <canvas class="compoundTexture" ref="compoundTexture"
-              :width="resolution" :height="resolution"
-              v-update-texture="{ texture, label, color, resolution }"></canvas>
-      <div class="scene" ref="scene"></div>
-      <form ref="form">
-        <input type="hidden" name="asset" :value="assets[position].name">
-        <p>
-          <button class="colorButton colorButton--red" type="button" @click="makeRed"></button>
-          <button class="colorButton colorButton--yellow" type="button" @click="makeYellow"></button>
-          <button class="colorButton colorButton--green" type="button" @click="makeGreen"></button>
-          <button class="colorButton colorButton--blue" type="button" @click="makeBlue"></button>
-          <input type="hidden" name="color" :value="color">
-        </p>
-        <p>
-          <input type="text" name="label" v-model="label">
-        </p>
-        <p>
-          <button type="submit" @click="submit">Submit</button>
-        </p>
-      </form>
-    </div>
+    <img class="originalTexture" ref="originalTexture" :src="assets[position].map" @load="textureLoaded">
+    <canvas class="compoundTexture" ref="compoundTexture"
+            :width="resolution" :height="resolution"
+            v-update-texture="{ texture, label, color, resolution }"></canvas>
+    <div class="scene" ref="scene"></div>
+    <form ref="form">
+      <input type="hidden" name="asset" :value="assets[position].name">
+      <p class="colorButtons">
+        <button class="colorButtons-button" :style="{ backgroundColor: this.colors.red }"
+                type="button" @click="makeRed">Red
+        </button>
+        <button class="colorButtons-button" :style="{ backgroundColor: this.colors.yellow }"
+                type="button" @click="makeYellow">Yellow
+        </button>
+        <button class="colorButtons-button" :style="{ backgroundColor: this.colors.green }"
+                type="button" @click="makeGreen">Green
+        </button>
+        <button class="colorButtons-button" :style="{ backgroundColor: this.colors.blue }"
+                type="button" @click="makeBlue">Blue
+        </button>
+        <input type="hidden" name="color" :value="color">
+      </p>
+      <p>
+        <input type="text" name="label" v-model="label">
+      </p>
+      <p>
+        <button type="submit" @click="submit">Submit</button>
+      </p>
+    </form>
   </v-touch>
 </template>
 
 <script>
   import shuffle from 'array-shuffle';
+  import axios from 'axios';
 
   import setup from './rendering';
 
   import assetList from './assets';
-  import nameList from '../vendor/names.json';
 
   function getShuffledAssets() {
     return shuffle(assetList);
-  }
-
-  function getRandomLabel() {
-    return Object.keys(nameList)[Math.floor(Math.random() * Object.keys(nameList).length)];
   }
 
   const colors = {
@@ -61,10 +63,20 @@
         texture: null,
         resolution: 2048,
         color: getRandomColor(),
+        colors,
         assets: getShuffledAssets(),
-        label: getRandomLabel(),
+        label: '',
         position: 0,
       };
+    },
+    beforeCreate() {
+      axios.get('https://uinames.com/api/?region=Austria')
+        .then((response) => {
+          this.label = response.data.name;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     mounted() {
       this.renderer = setup(this.$refs.scene, this.assets, this.$refs.compoundTexture);
@@ -75,9 +87,13 @@
         const form = this.$refs.form;
         const data = new FormData(form);
         data.append('img', this.$refs.compoundTexture.toDataURL('image/jpeg', 0.65));
-        const request = new XMLHttpRequest();
-        request.open('POST', '/submit');
-        request.send(data);
+        axios.post('/submit', data)
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       },
       makeRed() {
         this.color = colors.red;
@@ -140,11 +156,6 @@
 </script>
 
 <style scoped>
-  .column {
-    margin: 0 auto;
-    max-width: 320px;
-  }
-
   .originalTexture,
   .compoundTexture {
     display: none;
@@ -157,36 +168,26 @@
     height: 240px;
   }
 
-  .colorButton {
+  .colorButtons {
+    overflow: hidden;
+  }
+
+  .colorButtons-button {
     float: left;
     border: none;
     width: 25%;
     height: 44px;
+    color: #fff;
+    font-size: 0.75em;
   }
-  .colorButton--red {
-    background-color: red;
-  }
-  .colorButton--yellow {
-    background-color: yellow;
-  }
-  .colorButton--green {
-    background-color: green;
-  }
-  .colorButton--blue {
-    background-color: blue;
+
+  form {
+    padding: 0 1em;
   }
 
   input,
   [type="submit"] {
     height: 44px;
     width: 100%;
-  }
-
-  p {
-    overflow: hidden;
-  }
-
-  form {
-    padding: 0 1em;
   }
 </style>
