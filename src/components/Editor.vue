@@ -33,12 +33,17 @@
 </template>
 
 <script>
+  import Vue from 'vue';
+  import VueTouch from 'vue-touch';
+
   import shuffle from 'array-shuffle';
   import axios from 'axios';
 
   import setup from './rendering';
 
   import assetList from './assets';
+
+  Vue.use(VueTouch);
 
   function getShuffledAssets() {
     return shuffle(assetList);
