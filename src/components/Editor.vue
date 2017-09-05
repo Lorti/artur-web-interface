@@ -7,7 +7,7 @@
     <div class="scene" ref="scene"></div>
     <form ref="form">
       <input type="hidden" name="asset" :value="assets[position].name">
-      <p class="colorButtons">
+      <p v-if="advancedEditor" class="colorButtons">
         <button class="colorButtons-button" :style="{ backgroundColor: this.colors.red }"
                 type="button" @click="makeRed">Red
         </button>
@@ -23,7 +23,8 @@
         <input type="hidden" name="color" :value="color">
       </p>
       <p>
-        <input type="text" name="label" v-model="label">
+        <label v-if="!advancedEditor">Please enter your name, so you'll know what's your object in the game.</label>
+        <input type="text" name="label" v-model="label" :placeholder="placeholder">
       </p>
       <p>
         <button type="submit" @click="submit">Submit</button>
@@ -63,21 +64,28 @@
   export default {
     name: 'label',
     data() {
+      const advancedEditor = false;
       return {
+        advancedEditor,
         renderer: null,
         texture: null,
         resolution: 2048,
-        color: getRandomColor(),
+        color: advancedEditor ? getRandomColor() : '#808080',
         colors,
         assets: getShuffledAssets(),
         label: '',
+        placeholder: '',
         position: 0,
       };
     },
     beforeCreate() {
       axios.get('https://uinames.com/api/?region=Austria')
         .then((response) => {
-          this.label = response.data.name;
+          if (this.advancedEditor) {
+            this.label = response.data.name;
+          } else {
+            this.placeholder = response.data.name;
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -148,13 +156,19 @@
     },
     watch: {
       label() {
-        this.renderer.changeTexture();
+        if (this.advancedEditor) {
+          this.renderer.changeTexture();
+        }
       },
       color() {
-        this.renderer.changeTexture();
+        if (this.advancedEditor) {
+          this.renderer.changeTexture();
+        }
       },
       position(current, previous) {
-        this.renderer.swapTexture(current, previous);
+        if (this.advancedEditor) {
+          this.renderer.swapTexture(current, previous);
+        }
       },
     },
   };

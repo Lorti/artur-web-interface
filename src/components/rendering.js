@@ -118,7 +118,6 @@ function setup(element, assets, textureCanvas) {
     changeTexture();
   };
 
-  // TODO
   const rotation = { y: 0 };
   const tween = new TWEEN.Tween(rotation)
       .easing(TWEEN.Easing.Quadratic.InOut)
