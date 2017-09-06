@@ -61,10 +61,11 @@
     return Object.keys(colors)[Math.floor(Math.random() * Object.keys(colors).length)];
   }
 
+  const advancedEditor = false;
+
   export default {
     name: 'label',
     data() {
-      const advancedEditor = false;
       return {
         advancedEditor,
         renderer: null,
@@ -136,6 +137,7 @@
       },
       textureLoaded() {
         this.texture = this.$refs.originalTexture;
+        this.renderer.changeTexture();
       },
     },
     directives: {
@@ -156,19 +158,13 @@
     },
     watch: {
       label() {
-        if (this.advancedEditor) {
-          this.renderer.changeTexture();
-        }
+        this.renderer.changeTexture();
       },
       color() {
-        if (this.advancedEditor) {
-          this.renderer.changeTexture();
-        }
+        this.renderer.changeTexture();
       },
       position(current, previous) {
-        if (this.advancedEditor) {
-          this.renderer.swapTexture(current, previous);
-        }
+        this.renderer.swapTexture(current, previous);
       },
     },
   };
