@@ -40,9 +40,9 @@
   import shuffle from 'array-shuffle';
   import axios from 'axios';
 
-  import setup from './rendering';
-
   import assetList from './assets';
+  import config from '../config';
+  import setup from './rendering';
 
   Vue.use(VueTouch);
 
@@ -61,17 +61,15 @@
     return Object.keys(colors)[Math.floor(Math.random() * Object.keys(colors).length)];
   }
 
-  const advancedEditor = false;
-
   export default {
     name: 'label',
     data() {
       return {
-        advancedEditor,
+        advancedEditor: config.advancedEditor,
         renderer: null,
         texture: null,
         resolution: 2048,
-        color: advancedEditor ? getRandomColor() : '#808080',
+        color: config.advancedEditor ? getRandomColor() : '#808080',
         colors,
         assets: getShuffledAssets(),
         label: '',
@@ -101,7 +99,7 @@
         const form = this.$refs.form;
         const data = new FormData(form);
         data.append('img', this.$refs.compoundTexture.toDataURL('image/jpeg', 0.65));
-        axios.post('/submit', data)
+        axios.post(config.editorEndpoint, data)
           .then((response) => {
             console.log(response);
           })
