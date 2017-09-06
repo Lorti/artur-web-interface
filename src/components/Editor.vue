@@ -23,7 +23,7 @@
         <input type="hidden" name="color" :value="color">
       </p>
       <p>
-        <label v-if="!advancedEditor">Please enter your name, so you'll know what's your object in the game.</label>
+        <label v-if="!advancedEditor">Give your object a name<br>so you can find it in the game.</label>
         <input type="text" name="label" v-model="label" :placeholder="placeholder">
       </p>
       <p>
