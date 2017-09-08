@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import carBattery from '../../static/car-battery/settings.json';
 import crtMonitor from '../../static/crt-monitor/settings.json';
 import microwaveOven from '../../static/microwave-oven/settings.json';
@@ -7,9 +9,9 @@ import videoRecorder from '../../static/video-recorder/settings.json';
 
 export default [
   carBattery,
-  crtMonitor,
+//  crtMonitor,
   microwaveOven,
   tapeRecorder,
-  toaster,
-  videoRecorder,
+//  toaster,
+//  videoRecorder,
 ];

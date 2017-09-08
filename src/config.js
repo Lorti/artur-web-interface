@@ -1,4 +1,4 @@
 export default {
-  advancedEditor: false,
+  advancedEditor: true,
   editorEndpoint: '/submit',
 };
