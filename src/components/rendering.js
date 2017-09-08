@@ -18,6 +18,55 @@ function loadAsset(asset) {
   });
 }
 
+function objectFactory(assets, canvasTexture) {
+  const threeObjects = [];
+  const rotationVectors = [];
+
+  const offset = Math.PI;
+  const start = offset;
+  const end = (Math.PI * 2) + offset;
+  const step = (Math.PI * 2) / assets.length;
+  let index = 0;
+
+  for (let i = start; i < end; i += step) {
+    const object = new THREE.Object3D();
+    const first = index === 0;
+    const asset = assets[index];
+    loadAsset(asset).then((assetObject3d) => {
+      if (first) {
+        assetObject3d.traverse((node) => {
+          if (node.material) {
+            node.material.unalteredTexture = node.material.map;
+            node.material.map = canvasTexture;
+          }
+        });
+      }
+      assetObject3d.rotation.x = asset.transform.rotation.x;
+      assetObject3d.rotation.y = asset.transform.rotation.y;
+      assetObject3d.rotation.z = asset.transform.rotation.z;
+      assetObject3d.scale.multiplyScalar(asset.transform.scale);
+      object.add(assetObject3d);
+    });
+
+    object.position.x = 150 * Math.sin(i);
+    object.position.z = 150 * Math.cos(i);
+
+    const matrix = new THREE.Matrix4();
+    matrix.lookAt(object.position, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 1, 0));
+    object.quaternion.setFromRotationMatrix(matrix);
+    object.rotateY(Math.PI + 1);
+
+    threeObjects.push(object);
+    rotationVectors.push(object.rotation.clone());
+
+    index += 1;
+  }
+  return {
+    threeObjects,
+    rotationVectors,
+  };
+}
+
 function setup(element, assets, textureCanvas) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
@@ -49,61 +98,16 @@ function setup(element, assets, textureCanvas) {
   canvasTexture.anisotropy = renderer.getMaxAnisotropy();
 
   const wheel = new THREE.Object3D();
-  const objects = [];
-  const offset = Math.PI;
-  const start = offset;
-  const end = (Math.PI * 2) + offset;
-  const step = (Math.PI * 2) / assets.length;
-  let index = 0;
+  const { threeObjects, rotationVectors } = objectFactory(assets, canvasTexture);
 
-  for (let i = start; i < end; i += step) {
-    const object = new THREE.Object3D();
-    const first = index === 0;
-    const asset = assets[index];
-    loadAsset(asset).then((assetObject3d) => {
-      if (first) {
-        assetObject3d.traverse((node) => {
-          if (node.material) {
-            node.material.unalteredTexture = node.material.map;
-            node.material.map = canvasTexture;
-          }
-        });
-      }
-      assetObject3d.rotation.x = asset.transform.rotation.x;
-      assetObject3d.rotation.y = asset.transform.rotation.y;
-      assetObject3d.rotation.z = asset.transform.rotation.z;
-      assetObject3d.scale.multiplyScalar(asset.transform.scale);
-      object.add(assetObject3d);
-    });
-
-    object.position.x = 150 * Math.sin(i);
-    object.position.z = 150 * Math.cos(i);
-
+  threeObjects.forEach((object) => {
     wheel.add(object);
-    objects.push(object);
-
-
-    index += 1;
-  }
-
+  });
   scene.add(wheel);
 
-  const animate = () => {
-    requestAnimationFrame(animate);
-    objects.forEach((object) => { object.rotation.y -= 0.0125; });
-    TWEEN.update();
-    renderer.render(scene, camera);
-  };
-
-  animate();
-
-  const changeTexture = () => {
-    canvasTexture.needsUpdate = true;
-  };
-
   const swapTexture = (currentAssetIndex, previousAssetIndex) => {
-    const currentAsset = objects[currentAssetIndex];
-    const previousAsset = objects[previousAssetIndex];
+    const currentAsset = threeObjects[currentAssetIndex];
+    const previousAsset = threeObjects[previousAssetIndex];
     previousAsset.traverse((node) => {
       if (node.material) {
         node.material.map = node.material.unalteredTexture;
@@ -115,7 +119,6 @@ function setup(element, assets, textureCanvas) {
         node.material.map = canvasTexture;
       }
     });
-    changeTexture();
   };
 
   const rotation = { y: 0 };
@@ -127,21 +130,38 @@ function setup(element, assets, textureCanvas) {
 
   const previousAsset = () => {
     tween.stop()
-      .to({ y: wheel.rotation.y + step }, 750)
+      .to({ y: wheel.rotation.y + ((Math.PI * 2) / assets.length) }, 750)
       .start();
   };
 
   const nextAsset = () => {
     tween.stop()
-      .to({ y: wheel.rotation.y - step }, 750)
+      .to({ y: wheel.rotation.y - ((Math.PI * 2) / assets.length) }, 750)
       .start();
   };
 
+  const resetRotation = (assetIndex) => {
+    threeObjects[assetIndex].setRotationFromEuler(rotationVectors[assetIndex]);
+  };
+
+  const animate = () => {
+    requestAnimationFrame(animate);
+    threeObjects.forEach((object) => { object.rotateY(-0.0125); });
+    TWEEN.update();
+    if (textureCanvas.dataset.dirty === 'true') {
+      canvasTexture.needsUpdate = true;
+      textureCanvas.dataset.dirty = false;
+    }
+    renderer.render(scene, camera);
+  };
+
+  animate();
+
   return {
-    changeTexture,
     previousAsset,
     nextAsset,
     swapTexture,
+    resetRotation,
   };
 }
 

@@ -39,6 +39,7 @@
 
   import shuffle from 'array-shuffle';
   import axios from 'axios';
+  import debounce from 'debounce';
 
   import assetList from './assets';
   import config from '../config';
@@ -119,48 +120,45 @@
       makeBlue() {
         this.color = colors.blue;
       },
-      swipedLeft() {
+      swipedLeft: debounce(function () {
         this.position -= 1;
         if (this.position < 0) {
           this.position = this.assets.length - 1;
         }
         this.renderer.previousAsset();
-      },
-      swipedRight() {
+        this.renderer.resetRotation(this.position);
+      }, 750, true),
+      swipedRight: debounce(function () {
         this.position += 1;
         if (this.position > this.assets.length - 1) {
           this.position = 0;
         }
         this.renderer.nextAsset();
-      },
+        this.renderer.resetRotation(this.position);
+      }, 750, true),
       textureLoaded() {
         this.texture = this.$refs.originalTexture;
-        this.renderer.changeTexture();
       },
     },
     directives: {
       updateTexture(element, binding) {
-        const ctx = element.getContext('2d');
-        ctx.clearRect(0, 0, element.width, element.height);
         if (binding.value.texture) {
+          const ctx = element.getContext('2d');
+          ctx.clearRect(0, 0, element.width, element.height);
           ctx.drawImage(binding.value.texture, 0, 0, element.width, element.height);
+          ctx.fillStyle = binding.value.color;
+          ctx.fillRect(0, 0, element.width, element.height / 2);
+          ctx.fillStyle = 'white';
+          ctx.font = `${binding.value.resolution / 8}px Arial Black`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(binding.value.label, element.width / 2, element.height / 4);
+          // eslint-disable-next-line
+          element.dataset.dirty = true;
         }
-        ctx.fillStyle = binding.value.color;
-        ctx.fillRect(0, 0, element.width, element.height / 2);
-        ctx.fillStyle = 'white';
-        ctx.font = `${binding.value.resolution / 8}px Arial Black`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(binding.value.label, element.width / 2, element.height / 4);
       },
     },
     watch: {
-      label() {
-        this.renderer.changeTexture();
-      },
-      color() {
-        this.renderer.changeTexture();
-      },
       position(current, previous) {
         this.renderer.swapTexture(current, previous);
       },
