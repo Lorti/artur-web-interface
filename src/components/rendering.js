@@ -18,39 +18,10 @@ function loadAsset(asset) {
   });
 }
 
-function setup(element, assets, textureCanvas) {
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(
-    50, element.offsetWidth / element.offsetHeight, 1, 1000);
+function objectFactory(assets, canvasTexture) {
+  const threeObjects = [];
+  const rotationVectors = [];
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
-  ambientLight.color.setHSL(0.1, 1, 0.95);
-  scene.add(ambientLight);
-
-  const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.5);
-  hemisphereLight.color.setHSL(0.6, 1, 0.95);
-  hemisphereLight.groundColor.setHSL(0.095, 1, 0.75);
-  hemisphereLight.position.set(0, 0, 500);
-  scene.add(hemisphereLight);
-
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.65);
-  directionalLight.color.setHSL(0.1, 1, 0.95);
-  directionalLight.position.set(-1, 1, 1);
-  directionalLight.position.multiplyScalar(50);
-  directionalLight.castShadow = true;
-  scene.add(directionalLight);
-
-  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(element.offsetWidth, element.offsetHeight);
-  element.appendChild(renderer.domElement);
-
-  const canvasTexture = new THREE.CanvasTexture(textureCanvas);
-  canvasTexture.anisotropy = renderer.getMaxAnisotropy();
-
-  const wheel = new THREE.Object3D();
-  const objects = [];
-  const initialRotations = [];
   const offset = Math.PI;
   const start = offset;
   const end = (Math.PI * 2) + offset;
@@ -85,18 +56,58 @@ function setup(element, assets, textureCanvas) {
     object.quaternion.setFromRotationMatrix(matrix);
     object.rotateY(Math.PI + 1);
 
-    wheel.add(object);
-    objects.push(object);
-    initialRotations.push(object.rotation.clone());
+    threeObjects.push(object);
+    rotationVectors.push(object.rotation.clone());
 
     index += 1;
   }
+  return {
+    threeObjects,
+    rotationVectors,
+  };
+}
 
+function setup(element, assets, textureCanvas) {
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(
+    50, element.offsetWidth / element.offsetHeight, 1, 1000);
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
+  ambientLight.color.setHSL(0.1, 1, 0.95);
+  scene.add(ambientLight);
+
+  const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.5);
+  hemisphereLight.color.setHSL(0.6, 1, 0.95);
+  hemisphereLight.groundColor.setHSL(0.095, 1, 0.75);
+  hemisphereLight.position.set(0, 0, 500);
+  scene.add(hemisphereLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.65);
+  directionalLight.color.setHSL(0.1, 1, 0.95);
+  directionalLight.position.set(-1, 1, 1);
+  directionalLight.position.multiplyScalar(50);
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(element.offsetWidth, element.offsetHeight);
+  element.appendChild(renderer.domElement);
+
+  const canvasTexture = new THREE.CanvasTexture(textureCanvas);
+  canvasTexture.anisotropy = renderer.getMaxAnisotropy();
+
+  const wheel = new THREE.Object3D();
+  const { threeObjects, rotationVectors } = objectFactory(assets, canvasTexture);
+
+  threeObjects.forEach((object) => {
+    wheel.add(object);
+  });
   scene.add(wheel);
 
   const animate = () => {
     requestAnimationFrame(animate);
-    objects.forEach((object) => { object.rotateY(-0.0125); });
+    threeObjects.forEach((object) => { object.rotateY(-0.0125); });
     TWEEN.update();
     renderer.render(scene, camera);
   };
@@ -108,8 +119,8 @@ function setup(element, assets, textureCanvas) {
   };
 
   const swapTexture = (currentAssetIndex, previousAssetIndex) => {
-    const currentAsset = objects[currentAssetIndex];
-    const previousAsset = objects[previousAssetIndex];
+    const currentAsset = threeObjects[currentAssetIndex];
+    const previousAsset = threeObjects[previousAssetIndex];
     previousAsset.traverse((node) => {
       if (node.material) {
         node.material.map = node.material.unalteredTexture;
@@ -133,18 +144,18 @@ function setup(element, assets, textureCanvas) {
 
   const previousAsset = () => {
     tween.stop()
-      .to({ y: wheel.rotation.y + step }, 750)
+      .to({ y: wheel.rotation.y + ((Math.PI * 2) / assets.length) }, 750)
       .start();
   };
 
   const nextAsset = () => {
     tween.stop()
-      .to({ y: wheel.rotation.y - step }, 750)
+      .to({ y: wheel.rotation.y - ((Math.PI * 2) / assets.length) }, 750)
       .start();
   };
 
   const resetRotation = (assetIndex) => {
-    objects[assetIndex].setRotationFromEuler(initialRotations[assetIndex]);
+    threeObjects[assetIndex].setRotationFromEuler(rotationVectors[assetIndex]);
   };
 
   return {
