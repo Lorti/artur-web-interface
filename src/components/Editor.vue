@@ -39,6 +39,7 @@
 
   import shuffle from 'array-shuffle';
   import axios from 'axios';
+  import debounce from 'debounce';
 
   import assetList from './assets';
   import config from '../config';
@@ -119,22 +120,22 @@
       makeBlue() {
         this.color = colors.blue;
       },
-      swipedLeft() {
+      swipedLeft: debounce(function () {
         this.position -= 1;
         if (this.position < 0) {
           this.position = this.assets.length - 1;
         }
         this.renderer.previousAsset();
         this.renderer.resetRotation(this.position);
-      },
-      swipedRight() {
+      }, 750, true),
+      swipedRight: debounce(function () {
         this.position += 1;
         if (this.position > this.assets.length - 1) {
           this.position = 0;
         }
         this.renderer.nextAsset();
         this.renderer.resetRotation(this.position);
-      },
+      }, 750, true),
       textureLoaded() {
         this.texture = this.$refs.originalTexture;
       },
