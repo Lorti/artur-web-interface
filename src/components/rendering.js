@@ -105,16 +105,6 @@ function setup(element, assets, textureCanvas) {
   });
   scene.add(wheel);
 
-  const animate = () => {
-    requestAnimationFrame(animate);
-    threeObjects.forEach((object) => { object.rotateY(-0.0125); });
-    TWEEN.update();
-    canvasTexture.needsUpdate = true; // TODO
-    renderer.render(scene, camera);
-  };
-
-  animate();
-
   const swapTexture = (currentAssetIndex, previousAssetIndex) => {
     const currentAsset = threeObjects[currentAssetIndex];
     const previousAsset = threeObjects[previousAssetIndex];
@@ -153,6 +143,19 @@ function setup(element, assets, textureCanvas) {
   const resetRotation = (assetIndex) => {
     threeObjects[assetIndex].setRotationFromEuler(rotationVectors[assetIndex]);
   };
+
+  const animate = () => {
+    requestAnimationFrame(animate);
+    threeObjects.forEach((object) => { object.rotateY(-0.0125); });
+    TWEEN.update();
+    if (textureCanvas.dataset.dirty === 'true') {
+      canvasTexture.needsUpdate = true;
+      textureCanvas.dataset.dirty = false;
+    }
+    renderer.render(scene, camera);
+  };
+
+  animate();
 
   return {
     previousAsset,

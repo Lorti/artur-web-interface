@@ -152,6 +152,8 @@
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(binding.value.label, element.width / 2, element.height / 4);
+          // eslint-disable-next-line
+          element.dataset.dirty = true;
         }
       },
     },
