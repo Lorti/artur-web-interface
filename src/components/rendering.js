@@ -109,14 +109,11 @@ function setup(element, assets, textureCanvas) {
     requestAnimationFrame(animate);
     threeObjects.forEach((object) => { object.rotateY(-0.0125); });
     TWEEN.update();
+    canvasTexture.needsUpdate = true; // TODO
     renderer.render(scene, camera);
   };
 
   animate();
-
-  const changeTexture = () => {
-    canvasTexture.needsUpdate = true;
-  };
 
   const swapTexture = (currentAssetIndex, previousAssetIndex) => {
     const currentAsset = threeObjects[currentAssetIndex];
@@ -132,7 +129,6 @@ function setup(element, assets, textureCanvas) {
         node.material.map = canvasTexture;
       }
     });
-    changeTexture();
   };
 
   const rotation = { y: 0 };
@@ -159,7 +155,6 @@ function setup(element, assets, textureCanvas) {
   };
 
   return {
-    changeTexture,
     previousAsset,
     nextAsset,
     swapTexture,
