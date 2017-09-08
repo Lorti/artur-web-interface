@@ -50,6 +50,7 @@ function setup(element, assets, textureCanvas) {
 
   const wheel = new THREE.Object3D();
   const objects = [];
+  const initialRotations = [];
   const offset = Math.PI;
   const start = offset;
   const end = (Math.PI * 2) + offset;
@@ -79,9 +80,14 @@ function setup(element, assets, textureCanvas) {
     object.position.x = 150 * Math.sin(i);
     object.position.z = 150 * Math.cos(i);
 
+    const matrix = new THREE.Matrix4();
+    matrix.lookAt(object.position, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 1, 0));
+    object.quaternion.setFromRotationMatrix(matrix);
+    object.rotateY(Math.PI + 1);
+
     wheel.add(object);
     objects.push(object);
-
+    initialRotations.push(object.rotation.clone());
 
     index += 1;
   }
@@ -90,7 +96,7 @@ function setup(element, assets, textureCanvas) {
 
   const animate = () => {
     requestAnimationFrame(animate);
-    objects.forEach((object) => { object.rotation.y -= 0.0125; });
+    objects.forEach((object) => { object.rotateY(-0.0125); });
     TWEEN.update();
     renderer.render(scene, camera);
   };
@@ -137,11 +143,16 @@ function setup(element, assets, textureCanvas) {
       .start();
   };
 
+  const resetRotation = (assetIndex) => {
+    objects[assetIndex].setRotationFromEuler(initialRotations[assetIndex]);
+  };
+
   return {
     changeTexture,
     previousAsset,
     nextAsset,
     swapTexture,
+    resetRotation,
   };
 }
 

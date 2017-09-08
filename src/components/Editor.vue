@@ -125,6 +125,7 @@
           this.position = this.assets.length - 1;
         }
         this.renderer.previousAsset();
+        this.renderer.resetRotation(this.position);
       },
       swipedRight() {
         this.position += 1;
@@ -132,6 +133,7 @@
           this.position = 0;
         }
         this.renderer.nextAsset();
+        this.renderer.resetRotation(this.position);
       },
       textureLoaded() {
         this.texture = this.$refs.originalTexture;
