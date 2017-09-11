@@ -8,18 +8,12 @@
     <form ref="form">
       <input type="hidden" name="asset" :value="assets[position].name">
       <p v-if="advancedEditor" class="colorButtons">
-        <button class="colorButtons-button" :style="{ backgroundColor: this.colors.red }"
-                type="button" @click="makeRed">Red
-        </button>
-        <button class="colorButtons-button" :style="{ backgroundColor: this.colors.yellow }"
-                type="button" @click="makeYellow">Yellow
-        </button>
-        <button class="colorButtons-button" :style="{ backgroundColor: this.colors.green }"
-                type="button" @click="makeGreen">Green
-        </button>
-        <button class="colorButtons-button" :style="{ backgroundColor: this.colors.blue }"
-                type="button" @click="makeBlue">Blue
-        </button>
+        <template v-for="(value, key) in this.colors">
+          <button class="colorButtons-button" :style="{ backgroundColor: value }"
+                  type="button" @click="changeColor(value)">
+            {{ key }}
+          </button>
+        </template>
         <input type="hidden" name="color" :value="color">
       </p>
       <p>
@@ -108,17 +102,8 @@
             console.log(error);
           });
       },
-      makeRed() {
-        this.color = colors.red;
-      },
-      makeYellow() {
-        this.color = colors.yellow;
-      },
-      makeGreen() {
-        this.color = colors.green;
-      },
-      makeBlue() {
-        this.color = colors.blue;
+      changeColor(color) {
+        this.color = color;
       },
       swipedLeft: debounce(function () {
         this.position -= 1;
@@ -190,6 +175,10 @@
     height: 44px;
     color: #fff;
     font-size: 0.75em;
+  }
+
+  .colorButtons-button:first-letter {
+    text-transform: capitalize;
   }
 
   form {
