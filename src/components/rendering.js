@@ -23,15 +23,11 @@ function objectFactory(assets, canvasTexture) {
   const rotationVectors = [];
 
   const offset = Math.PI;
-  const start = offset;
-  const end = (Math.PI * 2) + offset;
   const step = (Math.PI * 2) / assets.length;
-  let index = 0;
 
-  for (let i = start; i < end; i += step) {
+  assets.forEach((asset, index) => {
     const object = new THREE.Object3D();
     const first = index === 0;
-    const asset = assets[index];
     loadAsset(asset).then((assetObject3d) => {
       if (first) {
         assetObject3d.traverse((node) => {
@@ -48,8 +44,9 @@ function objectFactory(assets, canvasTexture) {
       object.add(assetObject3d);
     });
 
-    object.position.x = 150 * Math.sin(i);
-    object.position.z = 150 * Math.cos(i);
+    const angle = offset + (step * index);
+    object.position.x = 150 * Math.sin(angle);
+    object.position.z = 150 * Math.cos(angle);
 
     const matrix = new THREE.Matrix4();
     matrix.lookAt(object.position, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 1, 0));
@@ -58,9 +55,8 @@ function objectFactory(assets, canvasTexture) {
 
     threeObjects.push(object);
     rotationVectors.push(object.rotation.clone());
+  });
 
-    index += 1;
-  }
   return {
     threeObjects,
     rotationVectors,
