@@ -3,10 +3,14 @@
     <img class="originalTexture" ref="originalTexture" :src="assets[position].map" @load="textureLoaded">
     <canvas class="compoundTexture" ref="compoundTexture"
             :width="resolution" :height="resolution"
-            v-update-texture="{ texture, label, color, resolution }"></canvas>
+            v-update-texture="{ texture, label: label.length ? label : placeholder, color }"></canvas>
     <div class="scene" ref="scene"></div>
     <form ref="form">
       <input type="hidden" name="asset" :value="assets[position].name">
+      <p>
+        <label>Give your object a name<br>so you can find it in the game.</label>
+        <input type="text" name="label" v-model="label" :placeholder="placeholder">
+      </p>
       <p v-if="advancedEditor" class="colorButtons">
         <template v-for="(value, key) in this.colors">
           <button class="colorButtons-button" :style="{ backgroundColor: value }"
@@ -15,10 +19,6 @@
           </button>
         </template>
         <input type="hidden" name="color" :value="color">
-      </p>
-      <p>
-        <label v-if="!advancedEditor">Give your object a name<br>so you can find it in the game.</label>
-        <input type="text" name="label" v-model="label" :placeholder="placeholder">
       </p>
       <p>
         <button type="submit" @click="submit">Submit</button>
@@ -41,10 +41,6 @@
 
   Vue.use(VueTouch);
 
-  function getShuffledAssets() {
-    return shuffle(assetList);
-  }
-
   const colors = {
     red: '#E61717',
     yellow: '#E6C217',
@@ -56,30 +52,32 @@
     return Object.keys(colors)[Math.floor(Math.random() * Object.keys(colors).length)];
   }
 
+  function getShuffledAssets() {
+    return shuffle(assetList);
+  }
+
   export default {
     name: 'label',
+    props: [
+      'advancedEditor',
+    ],
     data() {
       return {
-        advancedEditor: config.advancedEditor,
         renderer: null,
         texture: null,
-        resolution: 2048,
-        color: config.advancedEditor ? getRandomColor() : '#808080',
+        resolution: config.textureResolution,
+        color: this.advancedEditor ? getRandomColor() : '#808080',
         colors,
         assets: getShuffledAssets(),
+        position: 0,
         label: '',
         placeholder: '',
-        position: 0,
       };
     },
     beforeCreate() {
       axios.get('https://uinames.com/api/?region=Austria')
         .then((response) => {
-          if (this.advancedEditor) {
-            this.label = response.data.name;
-          } else {
-            this.placeholder = response.data.name;
-          }
+          this.placeholder = response.data.name;
         })
         .catch((error) => {
           console.log(error);
@@ -134,7 +132,7 @@
           ctx.fillStyle = binding.value.color;
           ctx.fillRect(0, 0, element.width, element.height / 2);
           ctx.fillStyle = 'white';
-          ctx.font = `${binding.value.resolution / 8}px Arial Black`;
+          ctx.font = `${element.width / 8}px Arial Black`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(binding.value.label, element.width / 2, element.height / 4);
@@ -159,7 +157,7 @@
 
   .scene {
     display: block;
-    margin: 1em auto;
+    margin: -1rem auto;
     width: 100%;
     height: 240px;
   }
@@ -174,7 +172,7 @@
     width: 25%;
     height: 44px;
     color: #fff;
-    font-size: 0.75em;
+    font-size: 0.75rem;
   }
 
   .colorButtons-button:first-letter {
@@ -182,7 +180,7 @@
   }
 
   form {
-    padding: 0 1em;
+    padding: 0 1rem;
   }
 
   input,

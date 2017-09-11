@@ -71,7 +71,6 @@ export default {
   }
 
   footer {
-    margin: 2rem auto;
     font-size: 0.875rem;
   }
   footer a {

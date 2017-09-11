@@ -1,4 +1,4 @@
 export default {
-  advancedEditor: true,
+  textureResolution: 1024,
   editorEndpoint: '/submit',
 };

@@ -8,6 +8,12 @@ export default new Router({
     {
       path: '/',
       component: () => import(/* webpackChunkName: "editor" */ '@/components/Editor'),
+      props: { advancedEditor: true },
+    },
+    {
+      path: '/plain',
+      component: () => import(/* webpackChunkName: "editor" */ '@/components/Editor'),
+      props: { advancedEditor: false },
     },
   ],
 });

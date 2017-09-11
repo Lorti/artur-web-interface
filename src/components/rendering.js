@@ -158,9 +158,9 @@ function setup(element, assets, textureCanvas) {
   animate();
 
   return {
+    swapTexture,
     previousAsset,
     nextAsset,
-    swapTexture,
     resetRotation,
   };
 }
